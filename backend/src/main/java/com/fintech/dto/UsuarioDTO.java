@@ -16,6 +16,7 @@ public class UsuarioDTO {
     private Long id;
     private String nome;
     private String email;
+    private String senha;
     private LocalDateTime dataCriacao;
     private List<ReceitaDTO> receitas;
     private List<DespesaDTO> despesas;

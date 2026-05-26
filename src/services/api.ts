@@ -1,6 +1,9 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, AxiosError } from 'axios';
 
 const API_URL = 'http://localhost:8080/api';
+
+type ApiData = Record<string, unknown>;
 
 class ApiService {
     private api: AxiosInstance;
@@ -23,7 +26,7 @@ class ApiService {
     }
 
     // USUARIO ENDPOINTS
-    async criarUsuario(usuario: any) {
+    async criarUsuario(usuario: ApiData) {
         return this.api.post('/usuarios', usuario);
     }
 
@@ -35,7 +38,7 @@ class ApiService {
         return this.api.get('/usuarios');
     }
 
-    async atualizarUsuario(id: number, usuario: any) {
+    async atualizarUsuario(id: number, usuario: ApiData) {
         return this.api.put(`/usuarios/${id}`, usuario);
     }
 
@@ -44,7 +47,7 @@ class ApiService {
     }
 
     // RECEITA ENDPOINTS
-    async criarReceita(receita: any) {
+    async criarReceita(receita: ApiData) {
         return this.api.post('/receitas', receita);
     }
 
@@ -56,7 +59,7 @@ class ApiService {
         return this.api.get(`/receitas/usuario/${usuarioId}`);
     }
 
-    async atualizarReceita(id: number, receita: any) {
+    async atualizarReceita(id: number, receita: ApiData) {
         return this.api.put(`/receitas/${id}`, receita);
     }
 
@@ -65,7 +68,7 @@ class ApiService {
     }
 
     // DESPESA ENDPOINTS
-    async criarDespesa(despesa: any) {
+    async criarDespesa(despesa: ApiData) {
         return this.api.post('/despesas', despesa);
     }
 
@@ -77,7 +80,7 @@ class ApiService {
         return this.api.get(`/despesas/usuario/${usuarioId}`);
     }
 
-    async atualizarDespesa(id: number, despesa: any) {
+    async atualizarDespesa(id: number, despesa: ApiData) {
         return this.api.put(`/despesas/${id}`, despesa);
     }
 
@@ -86,7 +89,7 @@ class ApiService {
     }
 
     // DIVIDA ENDPOINTS
-    async criarDivida(divida: any) {
+    async criarDivida(divida: ApiData) {
         return this.api.post('/dividas', divida);
     }
 
@@ -98,7 +101,7 @@ class ApiService {
         return this.api.get(`/dividas/usuario/${usuarioId}`);
     }
 
-    async atualizarDivida(id: number, divida: any) {
+    async atualizarDivida(id: number, divida: ApiData) {
         return this.api.put(`/dividas/${id}`, divida);
     }
 
@@ -111,7 +114,7 @@ class ApiService {
     }
 
     // INVESTIMENTO ENDPOINTS
-    async criarInvestimento(investimento: any) {
+    async criarInvestimento(investimento: ApiData) {
         return this.api.post('/investimentos', investimento);
     }
 
@@ -123,7 +126,7 @@ class ApiService {
         return this.api.get(`/investimentos/usuario/${usuarioId}`);
     }
 
-    async atualizarInvestimento(id: number, investimento: any) {
+    async atualizarInvestimento(id: number, investimento: ApiData) {
         return this.api.put(`/investimentos/${id}`, investimento);
     }
 

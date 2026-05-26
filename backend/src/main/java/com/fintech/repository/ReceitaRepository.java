@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface ReceitaRepository extends JpaRepository<Receita, Long> {
     List<Receita> findByUsuarioId(Long usuarioId);
+
     List<Receita> findByUsuarioIdAndDataBetween(Long usuarioId, LocalDate dataInicio, LocalDate dataFim);
+
     List<Receita> findByUsuarioIdOrderByDataDesc(Long usuarioId);
 }

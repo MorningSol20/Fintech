@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface DividaRepository extends JpaRepository<Divida, Long> {
     List<Divida> findByUsuarioId(Long usuarioId);
+
     List<Divida> findByUsuarioIdAndStatus(Long usuarioId, String status);
+
     List<Divida> findByUsuarioIdOrderByDataVencimentoAsc(Long usuarioId);
 }
