@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/logo.png";
 import "../styles/navbar.css";
 
 function Navbar() {
@@ -18,7 +19,7 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link to="/home" className="navbar-logo">
-                    <span className="logo-icon">💰</span>
+                    <img src={logo} alt="Letra-F" className="logo" />
                     <span className="logo-text">inasi</span>
                 </Link>
 

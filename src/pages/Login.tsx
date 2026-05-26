@@ -25,7 +25,7 @@ function Login() {
     return (
         <div className="login-container">
             <div className="login-title-container">
-                <img src={logo} alt="Letra-F" className="login-logo" />
+                <img src={logo} alt="Letra-F" className="logo" />
                 <h1 className="login-title">inasi</h1>                
             </div>
 
@@ -56,7 +56,7 @@ function Login() {
 
             </form>
             <p className="redirecionar">
-                Não tem uma conta?{" "}
+                    Não tem uma conta?{" "}
                 <Link className="login-link" to="/cadastrar">Cadastrar</Link>
             </p>
 

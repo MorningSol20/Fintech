@@ -27,6 +27,21 @@
     transition: all 0.2s ease;
 }
 
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.logo:hover .navbar-logo {
+    opacity: 0.8;
+}
+
 .navbar-logo:hover {
     opacity: 0.8;
 }
