@@ -1,0 +1,212 @@
+.dividas-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.dividas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--background);
+}
+
+.dividas-header h1 {
+    font-size: 28px;
+    color: var(--text);
+}
+
+/* Form */
+.divida-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--spacing-lg);
+    animation: slideDown 0.3s ease-out;
+}
+
+.divida-form input,
+.divida-form select {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+}
+
+.divida-form .btn-salvar {
+    grid-column: 1 / -1;
+}
+
+/* Resumo */
+.divida-resumo {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.divida-resumo h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Seções */
+.dividas-secao {
+    margin-bottom: var(--spacing-xl);
+}
+
+.dividas-secao h2 {
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--background);
+}
+
+/* Lista de Dívidas */
+.dividas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.divida-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--warning);
+    transition: all 0.3s ease;
+    animation: slideUp 0.3s ease-out;
+}
+
+.divida-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.divida-item.atrasada {
+    border-left-color: var(--danger);
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
+.divida-item.paga {
+    border-left-color: var(--success);
+    background-color: rgba(16, 185, 129, 0.05);
+    opacity: 0.7;
+}
+
+.divida-info {
+    flex: 1;
+}
+
+.divida-info h4 {
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: var(--spacing-xs);
+}
+
+.descricao {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.vencimento {
+    display: block;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: var(--spacing-xs);
+}
+
+.vencimento.atrasada {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.divida-valor {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-left: var(--spacing-lg);
+    text-align: right;
+}
+
+.divida-valor .valor {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--danger);
+    min-width: 120px;
+}
+
+.divida-item.paga .valor {
+    color: var(--success);
+}
+
+.divida-acoes {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.sem-dividas {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-light);
+    font-size: 16px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .dividas-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .divida-item {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .divida-valor {
+        width: 100%;
+        justify-content: space-between;
+        margin-left: 0;
+    }
+
+    .divida-form {
+        grid-template-columns: 1fr;
+    }
+}

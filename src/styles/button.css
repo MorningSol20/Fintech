@@ -1,0 +1,159 @@
+/* Primary Button */
+.button-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.button-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.button-primary:active {
+    transform: translateY(0);
+}
+
+/* Danger Button */
+.button-danger {
+    background-color: var(--danger);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.button-danger:hover {
+    background-color: #D40504;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.button-danger:active {
+    transform: translateY(0);
+}
+
+/* Success Button */
+.button-success {
+    background-color: var(--success);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.button-success:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Small Button */
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Utility Buttons */
+.btn-adicionar {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-adicionar:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-salvar {
+    background-color: var(--success);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.btn-salvar:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-deletar {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-deletar:hover {
+    transform: scale(1.2);
+}
+
+.btn-pagar {
+    background-color: var(--success);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+}
+
+.btn-pagar:hover {
+    opacity: 0.9;
+}
+
+.btn-voltar {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+}
+
+.btn-voltar:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}

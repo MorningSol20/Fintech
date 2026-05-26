@@ -7,19 +7,21 @@ import "../styles/input.css";
 import "../styles/button.css";
 
 
-function Login() {
+
+function Cadastrar() {
 
     const navigate = useNavigate();
 
     const [nome, setNome] = useState("");
+    const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    function entrar(e: React.FormEvent) {
+    function cadastrar(e: React.FormEvent) {
         e.preventDefault();
 
-        console.log(nome, senha);
+        console.log(nome, email, senha);
 
-        navigate("/home", { state: { nome } });
+        navigate("/home", { state: { nome, email, senha } });
     }
 
     return (
@@ -30,15 +32,22 @@ function Login() {
             </div>
 
 
-            <form className="login-form" onSubmit={entrar}>
+            <form className="login-form" onSubmit={cadastrar}>
 
-                <h2 className="login-subtitle">Login</h2>
+                <h2 className="login-subtitle">Cadastrar</h2>
 
                 <input
                     type="text"
                     placeholder="Usuario"
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
+                    className="input"
+                />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="input"
                 />
 
@@ -51,17 +60,17 @@ function Login() {
                 />
 
                 <button className="button-danger" type="submit">
-                    Entrar
+                    Cadastrar
                 </button>
 
             </form>
             <p className="redirecionar">
-                Não tem uma conta?{" "}
-                <Link className="login-link" to="/cadastrar">Cadastrar</Link>
+                Já tem uma conta?{" "}
+                <Link className="login-link" to="/">Login</Link>
             </p>
 
         </div>
     );
 }
 
-export default Login;
+export default Cadastrar;
