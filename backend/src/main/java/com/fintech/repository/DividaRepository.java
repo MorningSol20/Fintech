@@ -1,0 +1,14 @@
+package com.fintech.repository;
+
+import com.fintech.model.Divida;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface DividaRepository extends JpaRepository<Divida, Long> {
+    List<Divida> findByUsuarioId(Long usuarioId);
+    List<Divida> findByUsuarioIdAndStatus(Long usuarioId, String status);
+    List<Divida> findByUsuarioIdOrderByDataVencimentoAsc(Long usuarioId);
+}
