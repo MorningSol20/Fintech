@@ -9,7 +9,8 @@ function Navbar() {
         return location.pathname === path;
     };
 
-    const isAuthPage = location.pathname === "/" || location.pathname === "/cadastrar";
+    const rotasPrivadas = ["/home", "/receitas", "/despesas", "/dividas", "/investimentos"];
+    const isAuthPage = !rotasPrivadas.includes(location.pathname);
 
     if (isAuthPage) {
         return null;

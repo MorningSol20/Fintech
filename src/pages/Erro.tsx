@@ -17,9 +17,15 @@ function Erro() {
                 </div>
                 <button
                     className="btn-voltar"
-                    onClick={() => navigate("/home")}
+                    onClick={() => navigate("/cadastrar")}
                 >
-                    Voltar ao Dashboard
+                    Criar uma conta
+                </button><br />
+                <button
+                    className="btn-voltar"
+                    onClick={() => navigate("/")}
+                >
+                    Fazer login
                 </button>
             </div>
         </div>

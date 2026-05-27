@@ -6,7 +6,6 @@ import com.fintech.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +20,11 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado");
         }
-
         Usuario usuario = Usuario.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
                 .senha(dto.getSenha())
                 .build();
-
         Usuario saved = usuarioRepository.save(usuario);
         return toDTO(saved);
     }
@@ -47,10 +44,8 @@ public class UsuarioService {
     public UsuarioDTO atualizar(Long id, UsuarioDTO dto) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
-
         Usuario updated = usuarioRepository.save(usuario);
         return toDTO(updated);
     }
@@ -60,6 +55,12 @@ public class UsuarioService {
             throw new IllegalArgumentException("Usuário não encontrado");
         }
         usuarioRepository.deleteById(id);
+    }
+
+    public UsuarioDTO login(String email, String senha) {
+        Usuario usuario = usuarioRepository.findByEmailAndSenha(email, senha)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário ou senha incorretos"));
+        return toDTO(usuario);
     }
 
     private UsuarioDTO toDTO(Usuario usuario) {

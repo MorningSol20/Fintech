@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/investimentos.css";
+import api from "../services/api";
 
 interface Investimento {
     id: number;
@@ -11,99 +12,80 @@ interface Investimento {
 }
 
 function Investimentos() {
-    const [investimentos, setInvestimentos] = useState<Investimento[]>([
-        { id: 1, nome: "ITUB4", tipo: "Ação", valorInvestido: 2000, valorAtual: 2340, rentabilidade: 17 },
-        { id: 2, nome: "Tesouro IPCA+", tipo: "Renda Fixa", valorInvestido: 5000, valorAtual: 5250, rentabilidade: 5 },
-        { id: 3, nome: "Fundos Imobiliários", tipo: "Fundo", valorInvestido: 3000, valorAtual: 3150, rentabilidade: 5 },
-        { id: 4, nome: "BDR Apple", tipo: "Ação Int.", valorInvestido: 1500, valorAtual: 1890, rentabilidade: 26 },
-        { id: 5, nome: "ETF B3", tipo: "ETF", valorInvestido: 2500, valorAtual: 2870, rentabilidade: 14.8 },
-    ]);
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const usuarioId = usuario.id;
 
+    const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [nome, setNome] = useState("");
     const [tipo, setTipo] = useState("Ação");
     const [valorInvestido, setValorInvestido] = useState("");
     const [valorAtual, setValorAtual] = useState("");
 
+    const tipos = ["Ação", "Renda Fixa", "Fundo", "ETF", "Ação Int.", "Cripto"];
+
     const totalInvestido = investimentos.reduce((acc, inv) => acc + inv.valorInvestido, 0);
     const totalAtual = investimentos.reduce((acc, inv) => acc + inv.valorAtual, 0);
     const ganhoTotal = totalAtual - totalInvestido;
-    const rentabilidadeTotal = ((ganhoTotal / totalInvestido) * 100).toFixed(2);
+    const rentabilidadeTotal = totalInvestido > 0 ? ((ganhoTotal / totalInvestido) * 100).toFixed(2) : "0.00";
 
-    function adicionarInvestimento(e: React.FormEvent) {
+    useEffect(() => {
+        if (usuarioId) {
+            api.listarInvestimentosPorUsuario(usuarioId)
+                .then(res => setInvestimentos(res.data))
+                .catch(() => console.error("Erro ao carregar investimentos"));
+        }
+    }, [usuarioId]);
+
+    async function adicionarInvestimento(e: React.FormEvent) {
         e.preventDefault();
         if (nome && valorInvestido && valorAtual) {
-            const valInv = parseFloat(valorInvestido);
-            const valAtual = parseFloat(valorAtual);
-            const rentabilidade = ((valAtual - valInv) / valInv) * 100;
-
-            const novoInvestimento: Investimento = {
-                id: Math.max(...investimentos.map(i => i.id), 0) + 1,
-                nome,
-                tipo,
-                valorInvestido: valInv,
-                valorAtual: valAtual,
-                rentabilidade: parseFloat(rentabilidade.toFixed(2)),
-            };
-            setInvestimentos([...investimentos, novoInvestimento]);
-            setNome("");
-            setValorInvestido("");
-            setValorAtual("");
-            setShowForm(false);
+            try {
+                const valInv = parseFloat(valorInvestido);
+                const valAtual = parseFloat(valorAtual);
+                const rentabilidade = parseFloat(((valAtual - valInv) / valInv * 100).toFixed(2));
+                await api.criarInvestimento({ nome, tipo, valorInvestido: valInv, valorAtual: valAtual, rentabilidade, usuarioId });
+                const res = await api.listarInvestimentosPorUsuario(usuarioId);
+                setInvestimentos(res.data);
+                setNome("");
+                setValorInvestido("");
+                setValorAtual("");
+                setShowForm(false);
+            } catch {
+                console.error("Erro ao adicionar investimento");
+            }
         }
     }
 
-    function deletarInvestimento(id: number) {
-        setInvestimentos(investimentos.filter(i => i.id !== id));
+    async function deletarInvestimento(id: number) {
+        try {
+            await api.deletarInvestimento(id);
+            setInvestimentos(investimentos.filter(i => i.id !== id));
+        } catch {
+            console.error("Erro ao deletar investimento");
+        }
     }
-
-    const tipos = ["Ação", "Renda Fixa", "Fundo", "ETF", "Ação Int.", "Cripto"];
 
     return (
         <div className="investimentos-container">
             <div className="investimentos-header">
                 <h1>Investimentos</h1>
-                <button
-                    className="btn-adicionar"
-                    onClick={() => setShowForm(!showForm)}
-                >
+                <button className="btn-adicionar" onClick={() => setShowForm(!showForm)}>
                     {showForm ? "Cancelar" : "+ Adicionar Investimento"}
                 </button>
             </div>
 
             {showForm && (
                 <form className="investimento-form" onSubmit={adicionarInvestimento}>
-                    <input
-                        type="text"
-                        placeholder="Nome do investimento"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        required
-                    />
-                    <select
-                        value={tipo}
-                        onChange={(e) => setTipo(e.target.value)}
-                    >
-                        {tipos.map(t => (
-                            <option key={t} value={t}>{t}</option>
-                        ))}
+                    <input type="text" placeholder="Nome do investimento" value={nome}
+                        onChange={(e) => setNome(e.target.value)} required />
+                    <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                        {tipos.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
-                    <input
-                        type="number"
-                        placeholder="Valor investido"
-                        value={valorInvestido}
-                        onChange={(e) => setValorInvestido(e.target.value)}
-                        step="0.01"
-                        required
-                    />
-                    <input
-                        type="number"
-                        placeholder="Valor atual"
-                        value={valorAtual}
-                        onChange={(e) => setValorAtual(e.target.value)}
-                        step="0.01"
-                        required
-                    />
+                    <input type="number" placeholder="Valor investido" value={valorInvestido}
+                        onChange={(e) => setValorInvestido(e.target.value)} step="0.01" required />
+                    <input type="number" placeholder="Valor atual" value={valorAtual}
+                        onChange={(e) => setValorAtual(e.target.value)} step="0.01" required />
                     <button type="submit" className="btn-salvar">Salvar</button>
                 </form>
             )}
@@ -165,12 +147,7 @@ function Investimentos() {
                                             {inv.rentabilidade >= 0 ? '+' : ''}{inv.rentabilidade}%
                                         </span>
                                     </div>
-                                    <button
-                                        className="btn-deletar"
-                                        onClick={() => deletarInvestimento(inv.id)}
-                                    >
-                                        🗑️
-                                    </button>
+                                    <button className="btn-deletar" onClick={() => deletarInvestimento(inv.id)}>🗑️</button>
                                 </div>
                             </div>
                         );

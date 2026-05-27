@@ -1,138 +1,142 @@
-import axios from 'axios';
-import type { AxiosInstance, AxiosError } from 'axios';
+import axios from "axios";
+import type { AxiosInstance, AxiosError } from "axios";
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = "http://localhost:8080/api";
 
 type ApiData = Record<string, unknown>;
 
 class ApiService {
-    private api: AxiosInstance;
+  private api: AxiosInstance;
 
-    constructor() {
-        this.api = axios.create({
-            baseURL: API_URL,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+  constructor() {
+    this.api = axios.create({
+      baseURL: API_URL,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-        this.api.interceptors.response.use(
-            response => response,
-            (error: AxiosError) => {
-                console.error('API Error:', error.response?.data || error.message);
-                return Promise.reject(error);
-            }
-        );
-    }
+    this.api.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => {
+        console.error("API Error:", error.response?.data || error.message);
+        return Promise.reject(error);
+      },
+    );
+  }
 
-    // USUARIO ENDPOINTS
-    async criarUsuario(usuario: ApiData) {
-        return this.api.post('/usuarios', usuario);
-    }
+  // USUARIO ENDPOINTS
+  async criarUsuario(usuario: ApiData) {
+    return this.api.post("/usuarios", usuario);
+  }
 
-    async obterUsuario(id: number) {
-        return this.api.get(`/usuarios/${id}`);
-    }
+  async login(email: string, senha: string) {
+    return this.api.post("/usuarios/login", { email, senha });
+  }
 
-    async listarUsuarios() {
-        return this.api.get('/usuarios');
-    }
+  async obterUsuario(id: number) {
+    return this.api.get(`/usuarios/${id}`);
+  }
 
-    async atualizarUsuario(id: number, usuario: ApiData) {
-        return this.api.put(`/usuarios/${id}`, usuario);
-    }
+  async listarUsuarios() {
+    return this.api.get("/usuarios");
+  }
 
-    async deletarUsuario(id: number) {
-        return this.api.delete(`/usuarios/${id}`);
-    }
+  async atualizarUsuario(id: number, usuario: ApiData) {
+    return this.api.put(`/usuarios/${id}`, usuario);
+  }
 
-    // RECEITA ENDPOINTS
-    async criarReceita(receita: ApiData) {
-        return this.api.post('/receitas', receita);
-    }
+  async deletarUsuario(id: number) {
+    return this.api.delete(`/usuarios/${id}`);
+  }
 
-    async obterReceita(id: number) {
-        return this.api.get(`/receitas/${id}`);
-    }
+  // RECEITA ENDPOINTS
+  async criarReceita(receita: ApiData) {
+    return this.api.post("/receitas", receita);
+  }
 
-    async listarReceitasPorUsuario(usuarioId: number) {
-        return this.api.get(`/receitas/usuario/${usuarioId}`);
-    }
+  async obterReceita(id: number) {
+    return this.api.get(`/receitas/${id}`);
+  }
 
-    async atualizarReceita(id: number, receita: ApiData) {
-        return this.api.put(`/receitas/${id}`, receita);
-    }
+  async listarReceitasPorUsuario(usuarioId: number) {
+    return this.api.get(`/receitas/usuario/${usuarioId}`);
+  }
 
-    async deletarReceita(id: number) {
-        return this.api.delete(`/receitas/${id}`);
-    }
+  async atualizarReceita(id: number, receita: ApiData) {
+    return this.api.put(`/receitas/${id}`, receita);
+  }
 
-    // DESPESA ENDPOINTS
-    async criarDespesa(despesa: ApiData) {
-        return this.api.post('/despesas', despesa);
-    }
+  async deletarReceita(id: number) {
+    return this.api.delete(`/receitas/${id}`);
+  }
 
-    async obterDespesa(id: number) {
-        return this.api.get(`/despesas/${id}`);
-    }
+  // DESPESA ENDPOINTS
+  async criarDespesa(despesa: ApiData) {
+    return this.api.post("/despesas", despesa);
+  }
 
-    async listarDespesasPorUsuario(usuarioId: number) {
-        return this.api.get(`/despesas/usuario/${usuarioId}`);
-    }
+  async obterDespesa(id: number) {
+    return this.api.get(`/despesas/${id}`);
+  }
 
-    async atualizarDespesa(id: number, despesa: ApiData) {
-        return this.api.put(`/despesas/${id}`, despesa);
-    }
+  async listarDespesasPorUsuario(usuarioId: number) {
+    return this.api.get(`/despesas/usuario/${usuarioId}`);
+  }
 
-    async deletarDespesa(id: number) {
-        return this.api.delete(`/despesas/${id}`);
-    }
+  async atualizarDespesa(id: number, despesa: ApiData) {
+    return this.api.put(`/despesas/${id}`, despesa);
+  }
 
-    // DIVIDA ENDPOINTS
-    async criarDivida(divida: ApiData) {
-        return this.api.post('/dividas', divida);
-    }
+  async deletarDespesa(id: number) {
+    return this.api.delete(`/despesas/${id}`);
+  }
 
-    async obterDivida(id: number) {
-        return this.api.get(`/dividas/${id}`);
-    }
+  // DIVIDA ENDPOINTS
+  async criarDivida(divida: ApiData) {
+    return this.api.post("/dividas", divida);
+  }
 
-    async listarDividasPorUsuario(usuarioId: number) {
-        return this.api.get(`/dividas/usuario/${usuarioId}`);
-    }
+  async obterDivida(id: number) {
+    return this.api.get(`/dividas/${id}`);
+  }
 
-    async atualizarDivida(id: number, divida: ApiData) {
-        return this.api.put(`/dividas/${id}`, divida);
-    }
+  async listarDividasPorUsuario(usuarioId: number) {
+    return this.api.get(`/dividas/usuario/${usuarioId}`);
+  }
 
-    async marcarDividaComoPaga(id: number) {
-        return this.api.patch(`/dividas/${id}/pagar`);
-    }
+  async atualizarDivida(id: number, divida: ApiData) {
+    return this.api.put(`/dividas/${id}`, divida);
+  }
 
-    async deletarDivida(id: number) {
-        return this.api.delete(`/dividas/${id}`);
-    }
+  async marcarDividaComoPaga(id: number) {
+    return this.api.patch(`/dividas/${id}/pagar`);
+  }
 
-    // INVESTIMENTO ENDPOINTS
-    async criarInvestimento(investimento: ApiData) {
-        return this.api.post('/investimentos', investimento);
-    }
+  async deletarDivida(id: number) {
+    return this.api.delete(`/dividas/${id}`);
+  }
 
-    async obterInvestimento(id: number) {
-        return this.api.get(`/investimentos/${id}`);
-    }
+  // INVESTIMENTO ENDPOINTS
+  async criarInvestimento(investimento: ApiData) {
+    return this.api.post("/investimentos", investimento);
+  }
 
-    async listarInvestimentosPorUsuario(usuarioId: number) {
-        return this.api.get(`/investimentos/usuario/${usuarioId}`);
-    }
+  async obterInvestimento(id: number) {
+    return this.api.get(`/investimentos/${id}`);
+  }
 
-    async atualizarInvestimento(id: number, investimento: ApiData) {
-        return this.api.put(`/investimentos/${id}`, investimento);
-    }
+  async listarInvestimentosPorUsuario(usuarioId: number) {
+    return this.api.get(`/investimentos/usuario/${usuarioId}`);
+  }
 
-    async deletarInvestimento(id: number) {
-        return this.api.delete(`/investimentos/${id}`);
-    }
+  async atualizarInvestimento(id: number, investimento: ApiData) {
+    return this.api.put(`/investimentos/${id}`, investimento);
+  }
+
+  async deletarInvestimento(id: number) {
+    return this.api.delete(`/investimentos/${id}`);
+  }
 }
 
 export default new ApiService();

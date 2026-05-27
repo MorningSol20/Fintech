@@ -1,6 +1,6 @@
-# 💸 Fintech FIAP — Projeto Integrador
+# 💸 Finasi — Projeto Integrador FIAP
 
-> Projeto completo de uma aplicação Fintech desenvolvida com **Java + Spring Boot** (Backend) e **ReactJS** (Frontend), integrados a uma instância **Oracle** da FIAP.
+> Aplicação Fintech completa desenvolvida com **Java + Spring Boot** (Backend) e **ReactJS + TypeScript** (Frontend), integrada ao banco **Oracle da FIAP**.
 
 ---
 
@@ -10,8 +10,8 @@
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Pré-requisitos](#pré-requisitos)
-- [Configuração e Inicialização — Backend](#configuração-e-inicialização--backend)
-- [Configuração e Inicialização — Frontend](#configuração-e-inicialização--frontend)
+- [Inicialização — Backend](#inicialização--backend)
+- [Inicialização — Frontend](#inicialização--frontend)
 - [Entidades Implementadas](#entidades-implementadas)
 - [Endpoints da API](#endpoints-da-api)
 - [Dados de Autenticação para Teste](#dados-de-autenticação-para-teste)
@@ -21,133 +21,109 @@
 
 ## Sobre o Projeto
 
-Esta aplicação Fintech tem como objetivo gerenciar finanças pessoais, permitindo que usuários cadastrem e acompanhem seus **gastos**, **receitas** e **categorias financeiras**. O sistema oferece autenticação de usuários, CRUD completo para as entidades principais e uma interface web moderna e responsiva.
+O **Finasi** é uma aplicação de gestão financeira pessoal que permite ao usuário cadastrar e acompanhar suas **receitas**, **despesas**, **dívidas** e **investimentos**. O sistema conta com autenticação de usuários, CRUD completo para todas as entidades e um dashboard com os dados reais do banco.
 
 ---
 
 ## Tecnologias Utilizadas
 
 ### Backend
-- Java 17+
-- Spring Boot 3.x
+- Java 17
+- Spring Boot 3.3
 - Spring Data JPA
 - Oracle Database (instância FIAP)
+- Lombok
 - Maven
 
 ### Frontend
-- ReactJS 18.x
+- ReactJS 18 + TypeScript
 - React Router DOM (SPA)
 - React Hooks (useState, useEffect)
-- Fetch API (consumo REST)
+- Axios (consumo REST)
+- Vite
 
 ---
 
 ## Estrutura do Projeto
 
 ```
-fintech-fiap/
+Fintech/
 ├── backend/
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/br/com/fiap/fintech/
-│   │       │   ├── model/
-│   │       │   │   ├── Usuario.java
-│   │       │   │   ├── Gasto.java
-│   │       │   │   └── Categoria.java
-│   │       │   ├── repository/
-│   │       │   │   ├── UsuarioRepository.java
-│   │       │   │   ├── GastoRepository.java
-│   │       │   │   └── CategoriaRepository.java
-│   │       │   ├── service/
-│   │       │   │   ├── UsuarioService.java
-│   │       │   │   ├── GastoService.java
-│   │       │   │   └── CategoriaService.java
-│   │       │   └── controller/
-│   │       │       ├── UsuarioController.java
-│   │       │       ├── GastoController.java
-│   │       │       └── CategoriaController.java
-│   │       └── resources/
-│   │           └── application.properties
+│   ├── src/main/java/com/fintech/
+│   │   ├── model/
+│   │   │   ├── Usuario.java
+│   │   │   ├── Receita.java
+│   │   │   ├── Despesa.java
+│   │   │   ├── Divida.java
+│   │   │   └── Investimento.java
+│   │   ├── repository/
+│   │   ├── service/
+│   │   ├── controller/
+│   │   └── dto/
 │   └── pom.xml
 │
-└── frontend/
-    ├── public/
-    └── src/
-        ├── components/
-        │   ├── Navbar.jsx
-        │   └── Footer.jsx
-        ├── pages/
-        │   ├── Login.jsx
-        │   ├── Home.jsx
-        │   ├── NotFound.jsx
-        │   ├── usuarios/
-        │   ├── gastos/
-        │   └── categorias/
-        ├── App.jsx
-        └── main.jsx
+└── src/
+    ├── components/
+    │   └── Navbar.tsx
+    ├── pages/
+    │   ├── Login.tsx
+    │   ├── Cadastrar.tsx
+    │   ├── Home.tsx
+    │   ├── Receitas.tsx
+    │   ├── Despesas.tsx
+    │   ├── Dividas.tsx
+    │   ├── Investimentos.tsx
+    │   └── Erro.tsx
+    ├── services/
+    │   └── api.ts
+    └── routes/
 ```
 
 ---
 
 ## Pré-requisitos
 
-Certifique-se de ter instalado em sua máquina:
-
-- [Java 17+](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Maven 3.8+](https://maven.apache.org/download.cgi)
-- [Node.js 18+ e npm](https://nodejs.org/)
-- Acesso à rede da FIAP (VPN ou rede interna) para conexão com o banco Oracle
+- Java 17+
+- Node.js 18+ e npm
+- VSCode com as extensões:
+  - **Extension Pack for Java** (Microsoft)
+  - **Spring Boot Extension Pack** (VMware)
+- Acesso à rede da FIAP (VPN ativa se estiver fora da instituição)
 
 ---
 
-## Configuração e Inicialização — Backend
+## Inicialização — Backend
 
 ### 1. Configurar o banco de dados
 
-No arquivo `backend/src/main/resources/application.properties`, preencha com as credenciais Oracle da FIAP:
+No arquivo `backend/src/main/resources/application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
-spring.datasource.username=SEU_USUARIO_ORACLE
-spring.datasource.password=SUA_SENHA_ORACLE
+spring.datasource.username=SEU_RM
+spring.datasource.password=SUA_SENHA
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.OracleDialect
 ```
 
-> ⚠️ Substitua `SEU_USUARIO_ORACLE` e `SUA_SENHA_ORACLE` pelas suas credenciais pessoais da FIAP.
+> ⚠️ Substitua `SEU_RM` e `SUA_SENHA` pelas suas credenciais Oracle da FIAP.
 
-### 2. Compilar e executar o projeto
+### 2. Iniciar o backend
 
-Abra o terminal na pasta `backend/` e execute:
-
-```bash
-# Compilar o projeto
-mvn clean install
-
-# Iniciar o servidor
-mvn spring-boot:run
-```
+Abra o VSCode e clique no ícone do **Spring Boot Dashboard** na barra lateral esquerda. Clique em ▶️ ao lado do projeto para iniciá-lo.
 
 O backend estará disponível em: **http://localhost:8080**
 
 ---
 
-## Configuração e Inicialização — Frontend
+## Inicialização — Frontend
 
-### 1. Instalar dependências
-
-Abra o terminal na pasta `frontend/` e execute:
+Na pasta raiz do projeto (`Fintech/`), abra o terminal e execute:
 
 ```bash
 npm install
-```
-
-### 2. Iniciar o servidor de desenvolvimento
-
-```bash
 npm run dev
 ```
 
@@ -159,97 +135,138 @@ O frontend estará disponível em: **http://localhost:5173**
 
 ## Entidades Implementadas
 
-### 1. 👤 Usuário (`/api/usuarios`)
-Representa os usuários cadastrados na plataforma.
+### 1. 👤 Usuário
+Representa os usuários da plataforma.
 
-| Campo      | Tipo    | Descrição                    |
-|------------|---------|------------------------------|
-| id         | Long    | Identificador único          |
-| nome       | String  | Nome completo do usuário     |
-| email      | String  | E-mail (único)               |
-| senha      | String  | Senha de acesso              |
-| dataCadastro | LocalDate | Data de cadastro          |
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | Long | Identificador único |
+| nome | String | Nome do usuário |
+| email | String | E-mail (único) |
+| senha | String | Senha de acesso |
+| dataCriacao | LocalDateTime | Data de cadastro |
 
----
+### 2. 💰 Receita
+Representa as receitas financeiras do usuário.
 
-### 2. 💰 Gasto (`/api/gastos`)
-Representa os gastos financeiros registrados pelo usuário.
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | Long | Identificador único |
+| descricao | String | Descrição da receita |
+| fonte | String | Fonte da receita |
+| valor | Double | Valor da receita |
+| data | LocalDate | Data da receita |
+| usuarioId | Long | Usuário responsável |
 
-| Campo      | Tipo       | Descrição                        |
-|------------|------------|----------------------------------|
-| id         | Long       | Identificador único              |
-| descricao  | String     | Descrição do gasto               |
-| valor      | BigDecimal | Valor do gasto                   |
-| data       | LocalDate  | Data de realização               |
-| categoria  | Categoria  | Categoria associada              |
-| usuario    | Usuario    | Usuário responsável              |
+### 3. 💸 Despesa
+Representa os gastos do usuário.
 
----
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | Long | Identificador único |
+| nome | String | Nome da despesa |
+| categoria | String | Categoria da despesa |
+| valor | Double | Valor da despesa |
+| data | LocalDate | Data da despesa |
+| usuarioId | Long | Usuário responsável |
 
-### 3. 🏷️ Categoria (`/api/categorias`)
-Representa as categorias para classificação dos gastos.
+### 4. 💳 Dívida
+Representa as dívidas do usuário.
 
-| Campo     | Tipo   | Descrição                   |
-|-----------|--------|-----------------------------|
-| id        | Long   | Identificador único         |
-| nome      | String | Nome da categoria           |
-| descricao | String | Descrição da categoria      |
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | Long | Identificador único |
+| credor | String | Nome do credor |
+| descricao | String | Descrição da dívida |
+| valor | Double | Valor da dívida |
+| dataVencimento | LocalDate | Data de vencimento |
+| status | String | `ativa` ou `paga` |
+| usuarioId | Long | Usuário responsável |
+
+### 5. 📈 Investimento
+Representa os investimentos do usuário.
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | Long | Identificador único |
+| nome | String | Nome do investimento |
+| tipo | String | Tipo (Ação, Fundo, etc.) |
+| valorInvestido | Double | Valor investido |
+| valorAtual | Double | Valor atual |
+| rentabilidade | Double | Rentabilidade (%) |
+| usuarioId | Long | Usuário responsável |
 
 ---
 
 ## Endpoints da API
 
-### Usuários — `http://localhost:8080/api/usuarios`
+### Usuários — `/api/usuarios`
 
-| Método | Endpoint            | Descrição                     | Status |
-|--------|---------------------|-------------------------------|--------|
-| GET    | `/api/usuarios`     | Lista todos os usuários       | 200    |
-| GET    | `/api/usuarios/{id}`| Busca usuário por ID          | 200    |
-| POST   | `/api/usuarios`     | Cria novo usuário             | 201    |
-| PUT    | `/api/usuarios/{id}`| Atualiza usuário existente    | 200    |
-| DELETE | `/api/usuarios/{id}`| Remove usuário                | 204    |
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| GET | `/api/usuarios` | Lista todos os usuários | 200 |
+| GET | `/api/usuarios/{id}` | Busca usuário por ID | 200 |
+| POST | `/api/usuarios` | Cria novo usuário | 201 |
+| POST | `/api/usuarios/login` | Autentica usuário | 200 |
+| PUT | `/api/usuarios/{id}` | Atualiza usuário | 200 |
+| DELETE | `/api/usuarios/{id}` | Remove usuário | 204 |
 
-### Gastos — `http://localhost:8080/api/gastos`
+### Receitas — `/api/receitas`
 
-| Método | Endpoint          | Descrição                   | Status |
-|--------|-------------------|-----------------------------|--------|
-| GET    | `/api/gastos`     | Lista todos os gastos       | 200    |
-| GET    | `/api/gastos/{id}`| Busca gasto por ID          | 200    |
-| POST   | `/api/gastos`     | Registra novo gasto         | 201    |
-| PUT    | `/api/gastos/{id}`| Atualiza gasto existente    | 200    |
-| DELETE | `/api/gastos/{id}`| Remove gasto                | 204    |
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| GET | `/api/receitas/usuario/{id}` | Lista receitas do usuário | 200 |
+| POST | `/api/receitas` | Cria nova receita | 201 |
+| PUT | `/api/receitas/{id}` | Atualiza receita | 200 |
+| DELETE | `/api/receitas/{id}` | Remove receita | 204 |
 
-### Categorias — `http://localhost:8080/api/categorias`
+### Despesas — `/api/despesas`
 
-| Método | Endpoint              | Descrição                     | Status |
-|--------|-----------------------|-------------------------------|--------|
-| GET    | `/api/categorias`     | Lista todas as categorias     | 200    |
-| GET    | `/api/categorias/{id}`| Busca categoria por ID        | 200    |
-| POST   | `/api/categorias`     | Cria nova categoria           | 201    |
-| PUT    | `/api/categorias/{id}`| Atualiza categoria existente  | 200    |
-| DELETE | `/api/categorias/{id}`| Remove categoria              | 204    |
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| GET | `/api/despesas/usuario/{id}` | Lista despesas do usuário | 200 |
+| POST | `/api/despesas` | Cria nova despesa | 201 |
+| PUT | `/api/despesas/{id}` | Atualiza despesa | 200 |
+| DELETE | `/api/despesas/{id}` | Remove despesa | 204 |
+
+### Dívidas — `/api/dividas`
+
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| GET | `/api/dividas/usuario/{id}` | Lista dívidas do usuário | 200 |
+| POST | `/api/dividas` | Cria nova dívida | 201 |
+| PATCH | `/api/dividas/{id}/pagar` | Marca dívida como paga | 200 |
+| PUT | `/api/dividas/{id}` | Atualiza dívida | 200 |
+| DELETE | `/api/dividas/{id}` | Remove dívida | 204 |
+
+### Investimentos — `/api/investimentos`
+
+| Método | Endpoint | Descrição | Status |
+|--------|----------|-----------|--------|
+| GET | `/api/investimentos/usuario/{id}` | Lista investimentos do usuário | 200 |
+| POST | `/api/investimentos` | Cria novo investimento | 201 |
+| PUT | `/api/investimentos/{id}` | Atualiza investimento | 200 |
+| DELETE | `/api/investimentos/{id}` | Remove investimento | 204 |
 
 ---
 
 ## Dados de Autenticação para Teste
 
-Use as seguintes credenciais para acessar a aplicação no ambiente de testes:
-
 ```
-Usuário:  admin
+E-mail:  teste@fiap.com.br
 Senha:   123456
 ```
 
-> ℹ️ O usuário de teste já está pré-cadastrado no banco de dados com alguns gastos e categorias de exemplo para facilitar a avaliação.
+> ℹ️ O usuário de teste já está cadastrado no banco Oracle com dados de exemplo.
 
 ---
 
 ## Observações Importantes
 
-- O projeto utiliza obrigatoriamente a instância **Oracle da FIAP**. Sem acesso à rede FIAP (ou VPN ativa), o backend não conseguirá se conectar ao banco.
-- Não foram utilizados frameworks ou bibliotecas além dos apresentados no curso (Spring Boot, JPA, ReactJS e React Router).
+- O projeto utiliza obrigatoriamente a instância **Oracle da FIAP**. É necessário estar na rede da FIAP ou com VPN ativa.
+- Não foram utilizados frameworks ou bibliotecas além dos apresentados no curso.
 - O projeto foi testado de ponta a ponta antes da entrega.
-- Todas as 3 entidades possuem as camadas **Model → Repository → Service → Controller** no backend e as respectivas **páginas de listagem, cadastro, edição e remoção** no frontend.
+- Todas as 5 entidades possuem as camadas **Model → Repository → Service → Controller** no backend e páginas completas no frontend.
 
 ---
 
@@ -257,7 +274,10 @@ Senha:   123456
 
 | Nome | RM |
 |------|----|
-| Morôni Augusto Ribeiro Barra Sol | RM566778 |
+| Nome do Integrante 1 | RM000000 |
+| Nome do Integrante 2 | RM000000 |
+| Nome do Integrante 3 | RM000000 |
+| Nome do Integrante 4 | RM000000 |
 
 ---
 

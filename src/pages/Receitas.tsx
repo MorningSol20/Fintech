@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/receitas.css";
+import api from "../services/api";
 
 interface Receita {
     id: number;
@@ -10,88 +11,75 @@ interface Receita {
 }
 
 function Receitas() {
-    const [receitas, setReceitas] = useState<Receita[]>([
-        { id: 1, descricao: "Salário mensal", fonte: "Trabalho", valor: 3000, data: "2024-05-01" },
-        { id: 2, descricao: "Freelance - Projeto Web", fonte: "Freelancer", valor: 500, data: "2024-05-10" },
-        { id: 3, descricao: "Venda de itens antigos", fonte: "Venda", valor: 150, data: "2024-05-15" },
-        { id: 4, descricao: "Bônus anual", fonte: "Trabalho", valor: 2000, data: "2024-05-20" },
-    ]);
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const usuarioId = usuario.id;
 
+    const [receitas, setReceitas] = useState<Receita[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [descricao, setDescricao] = useState("");
     const [fonte, setFonte] = useState("Trabalho");
     const [valor, setValor] = useState("");
     const [data, setData] = useState("");
 
-    const totalReceitas = receitas.reduce((acc, receita) => acc + receita.valor, 0);
+    const fontes = ["Trabalho", "Freelancer", "Investimento", "Venda", "Bônus", "Outros"];
+    const totalReceitas = receitas.reduce((acc, r) => acc + r.valor, 0);
 
-    function adicionarReceita(e: React.FormEvent) {
+    useEffect(() => {
+        if (usuarioId) {
+            api.listarReceitasPorUsuario(usuarioId)
+                .then(res => setReceitas(res.data))
+                .catch(() => console.error("Erro ao carregar receitas"));
+        }
+    }, [usuarioId]);
+
+    async function adicionarReceita(e: React.FormEvent) {
         e.preventDefault();
         if (descricao && valor && data) {
-            const novaReceita: Receita = {
-                id: Math.max(...receitas.map(r => r.id), 0) + 1,
-                descricao,
-                fonte,
-                valor: parseFloat(valor),
-                data,
-            };
-            setReceitas([...receitas, novaReceita]);
-            setDescricao("");
-            setValor("");
-            setData("");
-            setShowForm(false);
+            try {
+                const [ano, mes, dia] = data.split("-");
+                const dataFormatada = `${dia}/${mes}/${ano}`;
+                await api.criarReceita({ descricao, fonte, valor: parseFloat(valor), data: dataFormatada, usuarioId });
+                const res = await api.listarReceitasPorUsuario(usuarioId);
+                setReceitas(res.data);
+                setDescricao("");
+                setValor("");
+                setData("");
+                setShowForm(false);
+            } catch {
+                console.error("Erro ao adicionar receita");
+            }
         }
     }
 
-    function deletarReceita(id: number) {
-        setReceitas(receitas.filter(r => r.id !== id));
+    async function deletarReceita(id: number) {
+        try {
+            await api.deletarReceita(id);
+            setReceitas(receitas.filter(r => r.id !== id));
+        } catch {
+            console.error("Erro ao deletar receita");
+        }
     }
-
-    const fontes = ["Trabalho", "Freelancer", "Investimento", "Venda", "Bônus", "Outros"];
 
     return (
         <div className="receitas-container">
             <div className="receitas-header">
                 <h1>Receitas</h1>
-                <button
-                    className="btn-adicionar"
-                    onClick={() => setShowForm(!showForm)}
-                >
+                <button className="btn-adicionar" onClick={() => setShowForm(!showForm)}>
                     {showForm ? "Cancelar" : "+ Adicionar Receita"}
                 </button>
             </div>
 
             {showForm && (
                 <form className="receita-form" onSubmit={adicionarReceita}>
-                    <input
-                        type="text"
-                        placeholder="Descrição"
-                        value={descricao}
-                        onChange={(e) => setDescricao(e.target.value)}
-                        required
-                    />
-                    <select
-                        value={fonte}
-                        onChange={(e) => setFonte(e.target.value)}
-                    >
-                        {fontes.map(f => (
-                            <option key={f} value={f}>{f}</option>
-                        ))}
+                    <input type="text" placeholder="Descrição" value={descricao}
+                        onChange={(e) => setDescricao(e.target.value)} required />
+                    <select value={fonte} onChange={(e) => setFonte(e.target.value)}>
+                        {fontes.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
-                    <input
-                        type="number"
-                        placeholder="Valor"
-                        value={valor}
-                        onChange={(e) => setValor(e.target.value)}
-                        step="0.01"
-                        required
-                    />
-                    <input
-                        type="date"
-                        value={data}
-                        onChange={(e) => setData(e.target.value)}
-                        required
-                    />
+                    <input type="number" placeholder="Valor" value={valor}
+                        onChange={(e) => setValor(e.target.value)} step="0.01" required />
+                    <input type="date" value={data}
+                        onChange={(e) => setData(e.target.value)} required />
                     <button type="submit" className="btn-salvar">Salvar</button>
                 </form>
             )}
@@ -109,16 +97,11 @@ function Receitas() {
                             <div className="receita-info">
                                 <h4>{receita.descricao}</h4>
                                 <span className="fonte">{receita.fonte}</span>
-                                <span className="data">{new Date(receita.data).toLocaleDateString('pt-BR')}</span>
+                                <span className="data">{receita.data.split("/").join("/")}</span>
                             </div>
                             <div className="receita-valor">
                                 <p className="valor-positivo">R$ {receita.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                                <button
-                                    className="btn-deletar"
-                                    onClick={() => deletarReceita(receita.id)}
-                                >
-                                    🗑️
-                                </button>
+                                <button className="btn-deletar" onClick={() => deletarReceita(receita.id)}>🗑️</button>
                             </div>
                         </div>
                     ))
